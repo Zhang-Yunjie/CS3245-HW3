@@ -65,12 +65,12 @@ def rank(query,dictionary,postings_file):
             
             for docID,log_tf in posting:
                 document_length = dictionary["DOC_LENGTH"][docID]
-                # Apply length normalization
+                # Apply length normalization for documents
                 term_doc_dictionary[term][docID] = log_tf / document_length
                 candidates.add(docID)
     
     # sort candidates
-    #candidates = sorted(list(candidates))
+    # candidates = sorted(list(candidates))
     
     pq = []
     
