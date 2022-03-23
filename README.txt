@@ -3,14 +3,28 @@ Email(s): e0421414@u.nus.edu, e0424771@u.nus.edu
 
 == Python Version ==
 
-I'm (We're) using Python Version 3.7.6 for
+We're using Python Version 3.7.6 for
 this assignment.
 
 == General Notes about this assignment ==
 
-Length Normalization
 
-We choose to normalizing later will require only one division on the final score of a document instead of one division on every dimension
+1. Index Construction
+    1.1 We removed stand alone punctuations. (e.g. "." in 1.2 is not removed, but "-" a - b is removed)
+    1.2 Each entry in the dictionary contains the idf of the term and the pointer to the postings list of the term.
+    1.3 We also stored the doc_length of all documents in the dictionary, for normalization later
+    1.4 Each postings list contains pairs of (docID, log_tf) 
+2. Length Normalization
+    We chose to only normalize documents. 
+    We chose to apply normalization when processing queries because it requires only one division 
+    on the final score of a document instead of one division on every dimension
+3. Search
+    3.1 We calculated the score of each term in the query based on the cosine of the angle between the query vector and document vector
+    3.2 Query vector calculation is similar to that of document vector calculation, but we did not normalize
+    query vectors because the length of query vector is the same when we compare across documents. Not normalizing
+    does not affect the ranking.
+    3.3 We then choose 10 documents with the highest score
+
 
 
 == Files included with this submission ==
@@ -18,6 +32,12 @@ We choose to normalizing later will require only one division on the final score
 List the files in your submission here and provide a short 1 line
 description of each file.  Make sure your submission's files are named
 and formatted correctly.
+
+README.txt
+index.py 
+search.py
+postings.txt
+dictionary.txt
 
 == Statement of individual work ==
 

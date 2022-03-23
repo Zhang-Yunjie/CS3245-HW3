@@ -16,8 +16,6 @@ def build_index(in_dir, out_dict, out_postings):
     then output the dictionary file and postings file
     """
     print('indexing...')
-    # This is an empty method
-    # Pls implement your code in below
     
     # get the list of files inside the input directory
     filenames = []
@@ -28,7 +26,7 @@ def build_index(in_dir, out_dict, out_postings):
     # sort filenames before processing data so docIDs in posting are in order
     filenames.sort()
     
-    # Total number of files
+    # Total number of documents
     N = len(filenames)
     
     #print(filenames)
@@ -36,13 +34,14 @@ def build_index(in_dir, out_dict, out_postings):
     dictionary = {}
     dictionary['DOC_LENGTH'] = {}
    
+    # process each file
     for filename in filenames:
         # print(filename)
         full_filename = os.path.join(in_dir, filename)
         text = open(full_filename, 'r', encoding="utf8").read()
                 
         """ Process the input text """
-        # Apply case folding, converting text to lower case
+        # Apply case folding
         text = text.lower()
                 
         # Remove punctuations
@@ -62,7 +61,8 @@ def build_index(in_dir, out_dict, out_postings):
                 else:
                     freq_map[stemmed_word] += 1
        
-        doc_length = 0
+        doc_length = 0 # initialise document_length for this document 
+                       # --> for score normalisation later
         
         # Precompute document frequency and posting list
         for term, tf in freq_map.items():
@@ -73,6 +73,8 @@ def build_index(in_dir, out_dict, out_postings):
             
             if term not in dictionary:
                 dictionary[term] = (1, [(int(filename), log_tf)])
+                # structure of each item in the dictionary: 
+                # (document_frequency, [(docID_1, log_tf_1), (docID_2, log_tf_2) ... (docID_n, log_tf_n)])
             else:
                 # Update current document frequency
                 df = dictionary[term][0] + 1
@@ -87,7 +89,7 @@ def build_index(in_dir, out_dict, out_postings):
     f_dict.truncate(0)
     f_post.truncate(0)
     
-    # Write to dictionary.txt and posting.txt
+    # Write dictionaries and postings to dictionary.txt and posting.txt
     for term, value in dictionary.items():
         if term == "DOC_LENGTH":
             continue
