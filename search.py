@@ -5,6 +5,7 @@ import sys
 import getopt
 import heapq
 import pickle
+import math
 
 def usage():
     print("usage: " + sys.argv[0] + " -d dictionary-file -p postings-file -q file-of-queries -o output-file-of-results")
@@ -20,10 +21,10 @@ def run_search(dict_file, postings_file, queries_file, results_file):
     
     file = open(dict_file, 'rb')
     # load dictionary file into memory
-    dictionary = pickle.load(dictionary)
+    dictionary = pickle.load(file)
     file.close()
     
-    #posting = open(postings_file, 'rb')
+    postings_file = open(postings_file, 'rb')
     
     # Obtain input and output files, parse the queries into list
     in_file = open(queries_file, 'r', encoding="utf8")
@@ -39,7 +40,7 @@ def run_search(dict_file, postings_file, queries_file, results_file):
         else:
             result = rank(query,dictionary,postings_file)
             final_result = " ".join(result)
-            out_file.(final_result)
+            out_file.write(final_result)
             
         # if current line is not the last line, add a line break
         if query_list:
@@ -69,7 +70,7 @@ def rank(query,dictionary,postings_file):
                 candidates.add(docID)
     
     # sort candidates
-    candidates = sorted(list(candidates))
+    #candidates = sorted(list(candidates))
     
     pq = []
     
@@ -87,7 +88,7 @@ def rank(query,dictionary,postings_file):
                 score += cos_similarity
         
         # Sort by decreasing order of the score, but sort ascending of doc id if the score is the same
-        heapq.heappush(pq, (score, -1 * int(docId)))
+        heapq.heappush(pq, (score, -1 * int(docID)))
     
     return map(lambda x: str(-1 * x[1]),heapq.nlargest(10, pq))
         
@@ -105,7 +106,7 @@ def computeQueryVector(query,dictionary,postings_file):
         else:
             term_freq[token] += 1
     
-    query_length = 0
+    #query_length = 0
     query_term_vector = {}
     
     # Compute tf-idf for query
@@ -117,16 +118,17 @@ def computeQueryVector(query,dictionary,postings_file):
             tf = term_freq[term]
             log_tf = 1 + math.log(tf,10)
             score = log_tf * idf
-            query_length += score ** 2
+            #query_length += score ** 2
         
         query_term_vector[term] = score
   
+    """
     normalization_denominator = math.sqrt(query_length)
     if normalization_denominator != 0:
         #Apply length normalization
         for term in query_term_vector.keys():
             query_term_vector[term] /= normalization_denominator
-          
+    """
     return query_term_vector
     
     

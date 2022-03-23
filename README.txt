@@ -8,9 +8,10 @@ this assignment.
 
 == General Notes about this assignment ==
 
-Give an overview of your program, describe the important algorithms/steps 
-in your program, and discuss your experiments in general.  A few paragraphs 
-are usually sufficient.
+Length Normalization
+
+We choose to normalizing later will require only one division on the final score of a document instead of one division on every dimension
+
 
 == Files included with this submission ==
 

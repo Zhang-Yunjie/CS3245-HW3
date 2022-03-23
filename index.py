@@ -4,6 +4,8 @@ import nltk
 import sys
 import getopt
 import pickle
+import os
+import math
 
 def usage():
     print("usage: " + sys.argv[0] + " -i directory-of-documents -d dictionary-file -p postings-file")
@@ -36,8 +38,6 @@ def build_index(in_dir, out_dict, out_postings):
    
     for filename in filenames:
         # print(filename)
-        if not filename in all_docIDs:
-            all_docIDs.append(int(filename))
         full_filename = os.path.join(in_dir, filename)
         text = open(full_filename, 'r', encoding="utf8").read()
                 
@@ -46,7 +46,7 @@ def build_index(in_dir, out_dict, out_postings):
         text = text.lower()
                 
         # Remove punctuations
-        text = re.sub(r'[^a-z0-9A-Z_]',' ', text)
+        #text = re.sub(r'[^\w\s]', '', text)
 
         # Initialize term frequency map
         freq_map = {}
@@ -54,7 +54,7 @@ def build_index(in_dir, out_dict, out_postings):
         # Apply tokenization and stemming
         for sentence in nltk.sent_tokenize(text):
             for word in nltk.word_tokenize(sentence):
-                stemmed_word = PorterStemmer().stem(word)
+                stemmed_word = nltk.stem.PorterStemmer().stem(word)
                 
                 # Update term frequency map
                 if stemmed_word not in freq_map:
