@@ -6,6 +6,7 @@ import getopt
 import pickle
 import os
 import math
+import string
 
 def usage():
     print("usage: " + sys.argv[0] + " -i directory-of-documents -d dictionary-file -p postings-file")
@@ -53,6 +54,8 @@ def build_index(in_dir, out_dict, out_postings):
         # Apply tokenization and stemming
         for sentence in nltk.sent_tokenize(text):
             for word in nltk.word_tokenize(sentence):
+                if word in string.punctuation:
+                    continue
                 stemmed_word = nltk.stem.PorterStemmer().stem(word)
                 
                 # Update term frequency map
