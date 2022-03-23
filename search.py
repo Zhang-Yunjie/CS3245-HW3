@@ -97,6 +97,7 @@ def computeQueryVector(query,dictionary,postings_file):
     # Tokenize query, apply stemming and case folding, split query by " "
     stemmer = nltk.stem.PorterStemmer()
     token_list = list(map(lambda x: stemmer.stem(x).lower(), query.split(" ")))
+    filtered_list = [token for token in token_list if token not in string.punctuation] # remove tokens that are solely punctuations
     
     # Count frequency for each token in query
     term_freq = {}
@@ -118,17 +119,9 @@ def computeQueryVector(query,dictionary,postings_file):
             tf = term_freq[term]
             log_tf = 1 + math.log(tf,10)
             score = log_tf * idf
-            #query_length += score ** 2
         
         query_term_vector[term] = score
-  
-    """
-    normalization_denominator = math.sqrt(query_length)
-    if normalization_denominator != 0:
-        #Apply length normalization
-        for term in query_term_vector.keys():
-            query_term_vector[term] /= normalization_denominator
-    """
+
     return query_term_vector
     
     
